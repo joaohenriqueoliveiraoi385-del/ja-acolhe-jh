@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Acolhe</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="manifest"
+          href="{{ url_for('static', filename='manifest.json') }}">
+</head>
+
+<body>
+
+    <header>
+        <h1>Acolhe</h1>
+        <p>Um espaço seguro para acolher, compartilhar e cuidar.</p>
+    </header>
+
+
+    <main>
+
+        <section>
+            <h2>Cadastrar usuário</h2>
+
+            <form action="{{ url_for('usu.create') }}" method="post">
+
+                <label for="nome">Nome:</label>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Nome"
+                    required
+                >
+
+                <label for="gmail">E-mail:</label>
+                <input
+                    type="email"
+                    id="gmail"
+                    name="gmail"
+                    placeholder="E-mail"
+                    required
+                >
+
+                <label for="senha">Senha:</label>
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Senha"
+                    required
+                >
+
+                <button type="submit">Cadastrar</button>
+
+            </form>
+        </section>
+
+
+        <section>
+            <h2>Compartilhe algo</h2>
+
+            <form action="{{ url_for('publi.create') }}" method="post">
+
+                <label for="titulo">Título:</label>
+                <input
+                    type="text"
+                    id="titulo"
+                    name="titulo"
+                    placeholder="Título da publicação"
+                    required
+                >
+
+                <label for="conteudo">Conteúdo:</label>
+                <textarea
+                    id="conteudo"
+                    name="conteudo"
+                    placeholder="Escreva o que você gostaria de compartilhar..."
+                    required
+                ></textarea>
+
+                <button type="submit">Publicar</button>
+
+            </form>
+        </section>
+
+
+        <section>
+            <h2>Publicações</h2>
+
+            {% if publicacoes %}
+
+                {% for publicacao in publicacoes %}
+
+                    <article class="publicacao">
+
+                        <h3>{{ publicacao.titulo_publi }}</h3>
+
+                        <p>{{ publicacao.texto_publi }}</p>
+
+                        {% if publicacao.usuario %}
+                            <small>
+                                Publicado por {{ publicacao.usuario.nome }}
+                            </small>
+                        {% endif %}
+
+                    </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>Ainda não existem publicações.</p>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register(
+                "{{ url_for('static', filename='service-worker.js') }}"
+            );
+        }
+    </script>
+
+</body>
+
+</html>
