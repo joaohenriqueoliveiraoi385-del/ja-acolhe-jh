@@ -14,7 +14,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
-
 app.register_blueprint(Usu_bp, url_prefix="/usuarios")
 app.register_blueprint(Publi_bp, url_prefix="/publicacoes")
 

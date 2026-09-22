@@ -1,0 +1,21 @@
+{extends "base.html"}
+
+{% block title %}Cadastrar Usuário{% endblock title %}
+
+{% block conteudo %}
+    <section>
+        <h2>Cadastrar Usuário</h2>
+        <form action="{{ url_for('usu.create') }}" method="post">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Nome" required>
+
+            <label for="gmail">E-mail:</label>
+            <input type="email" id="gmail" name="gmail" placeholder="E-mail" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" placeholder="Senha" required>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+    </section>
+{% endblock conteudo %}

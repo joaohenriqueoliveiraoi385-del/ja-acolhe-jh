@@ -16,7 +16,7 @@ def create():
     usuario_existente = Usu.query.filter_by(gmail=gmail).first()
 
     if usuario_existente:
-        return redirect(url_for("index"))
+        return redirect(url_for("index.html", error="Usuário já existe."))
 
     novo_usuario = Usu(
         nome=nome,
@@ -24,7 +24,9 @@ def create():
         senha=senha
     )
 
+
+
     db.session.add(novo_usuario)
     db.session.commit()
 
-    return redirect(url_for("index"))
+    return redirect(url_for("index.html", success="Usuário criado com sucesso!"))
