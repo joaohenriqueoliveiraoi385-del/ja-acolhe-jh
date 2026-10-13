@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock title %}
+
+{% block conteudo %}
+    <section>
+        <h2>Entrar no Acolhe</h2>
+        <form action="{{ url_for('usu.login') }}" method="post">
+            <label for="gmail">E-mail:</label>
+            <input type="email" id="gmail" name="gmail" placeholder="Seu e-mail cadastrado" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p style="margin-top: 15px; text-align: center;">
+            Ainda não tem uma conta? <a href="{{ url_for('usu.create') }}">Cadastre-se</a>
+        </p>
+    </section>
+{% endblock conteudo %}

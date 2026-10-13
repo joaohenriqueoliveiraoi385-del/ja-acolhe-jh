@@ -1,29 +1,27 @@
-from flask import Blueprint, redirect, request, url_for
-
+from flask import Blueprint, request, redirect, url_for, session
 from db import db
-from model import Publi, Usu
+from model import Publi
+
+publi = Blueprint("publi", __name__)
 
 
-Publi_bp = Blueprint("publi", __name__)
-
-
-@Publi_bp.route("/create", methods=["POST"])
+@publi.route("/create", methods=["POST"])
 def create():
-    titulo = request.form["titulo"]
-    conteudo = request.form["conteudo"]
+    if 'usuario_id' not in session:
+        return redirect(url_for("home"))
 
-    usuario = Usu.query.first()
+    titulo = request.form.get("titulo")
+    texto = request.form.get("conteudo")
+    
+    usu_id = session['usuario_id']
 
-    if usuario is None:
-        return redirect(url_for("index"))
-
-    nova_publicacao = Publi(
+    nova_publi = Publi(
         titulo_publi=titulo,
-        texto_publi=conteudo,
-        usu_id=usuario.id_usu
+        texto_publi=texto,
+        usu_id=usu_id
     )
 
-    db.session.add(nova_publicacao)
+    db.session.add(nova_publi)
     db.session.commit()
 
     return redirect(url_for("index"))

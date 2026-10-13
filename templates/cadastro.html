@@ -1,6 +1,6 @@
-{extends "base.html"}
+{% extends "base.html" %}
 
-{% block title %}Cadastrar Usuário{% endblock title %}
+{% block title %}{% endblock title %}
 
 {% block conteudo %}
     <section>
@@ -17,5 +17,9 @@
 
             <button type="submit">Cadastrar</button>
         </form>
+
+        <p style="margin-top: 15px; text-align: center;">
+            Já tem uma conta? <a href="{{ url_for('home') }}">Faça login</a>
+        </p>
     </section>
 {% endblock conteudo %}
