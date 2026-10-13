@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock title %}
+
+{% block conteudo %}
+    <header>
+        <h1>Meu Diário Emocional</h1>
+        <p>Um espaço privado e seguro para registrar seus sentimentos e pensamentos.</p>
+        <p><a href="{{ url_for('index') }}">← Voltar para o Feed</a></p>
+    </header>
+
+    <section style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2>Nova Anotação</h2>
+        <form action="{{ url_for('diar.criar') }}" method="post">
+            <label for="humor">Como você está se sentindo?</label>
+            <input type="text" id="humor" name="humor" placeholder="Ex: Feliz, Ansioso, Calmo, Reflexivo..." required>
+
+            <label for="texto_diar">Escreva seus pensamentos:</label>
+            <textarea id="texto_diar" name="texto_diar" placeholder="Escreva aqui o que está passando pela sua mente..." rows="5" required></textarea>
+
+            <button type="submit">Salvar no Diário</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Minhas Anotações Anteriores</h2>
+        {% if diarios %}
+            {% for diario in diarios %}
+                <article style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background: #fff;">
+                    <h3>Humor: {{ diario.humor }}</h3>
+                    <p>{{ diario.texto_diar }}</p>
+                    <small style="color: #666;">Registrado em: {{ diario.data_registro.strftime('%d/%m/%Y às %H:%M') }}</small>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p>Você ainda não tem anotações no seu diário. Comece a registrar acima!</p>
+        {% endif %}
+    </section>
+{% endblock conteudo %}
