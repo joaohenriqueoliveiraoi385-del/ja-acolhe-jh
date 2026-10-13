@@ -4,14 +4,19 @@
 
 {% block conteudo %}
 
-    <header>
+   <header>
         <h1>Acolhe</h1>
         <p>Um espaço seguro para acolher, compartilhar e cuidar.</p>
+        <p>
+            <a href="{{ url_for('diar.index') }}" style="font-weight: bold; color: #2c3e50;">📖 Abrir Meu Diário Emocional</a>
+        </p>
     </header>
+
+
 
     <section>
         <h2>Compartilhe algo</h2>
-       <form action="{{ url_for('publi.create') }}" method="post">
+        <form action="{{ url_for('publi.create') }}" method="post">
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" name="titulo" placeholder="Título da publicação" required>
 
@@ -26,12 +31,39 @@
         <h2>Publicações</h2>
         {% if publicacoes %}
             {% for publicacao in publicacoes %}
-                <article class="publicacao">
+                <article class="publicacao" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
                     <h3>{{ publicacao.titulo_publi }}</h3>
                     <p>{{ publicacao.texto_publi }}</p>
                     {% if publicacao.usuario %}
-                        <small>Publicado por {{ publicacao.usuario.nome }}</small>
+                        <small>Publicado por <strong>{{ publicacao.usuario.nome }}</strong></small>
                     {% endif %}
+
+                    <div style="margin-top: 10px;">
+                        <form action="{{ url_for('publi.curtir', publi_id=publicacao.id_publi) }}" method="post" style="display: inline;">
+                            <button type="submit">❤️ Curtir ({{ publicacao.curtidas|length if publicacao.curtidas else 0 }})</button>
+                        </form>
+                    </div>
+
+                    <hr style="margin: 15px 0;">
+
+                    <h4>Comentários</h4>
+                    {% if publicacao.comentarios %}
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            {% for comentario in publicacao.comentarios %}
+                                <li style="background: #f4f4f4; padding: 8px; margin-bottom: 5px; border-radius: 4px;">
+                                    <strong>{{ comentario.usuario.nome if comentario.usuario else 'Anônimo' }}:</strong>
+                                    {{ comentario.texto_coment }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p><small>Nenhum comentário ainda. Seja o primeiro a comentar!</small></p>
+                    {% endif %}
+
+                    <form action="{{ url_for('publi.comentar', publi_id=publicacao.id_publi) }}" method="post" style="margin-top: 10px;">
+                        <input type="text" name="texto_coment" placeholder="Escreva um comentário..." required style="width: 70%;">
+                        <button type="submit">Comentar</button>
+                    </form>
                 </article>
             {% endfor %}
         {% else %}
