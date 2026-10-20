@@ -1,28 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Acolhe{% endblock %}</title>
     
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        {% block title %}{% endblock %}
-        
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    </head> 
-        
-    <body>
-        <main>
-            {% block conteudo %}{% endblock conteudo %}
-        </main>
+   
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.5">
     
-        <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
 
-        <script>
-            if ("serviceWorker" in navigator) {
-                navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}");
-            }
-        </script>
-    </body>
+    <main class="container">
+        {% block conteudo %}{% endblock %}
+    </main>
 
+    
+    {% if request.endpoint not in ['home', 'usu.create'] %}
+    <nav class="bottom-nav">
+        <a href="{{ url_for('index') }}" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Feed</span>
+        </a>
+
+        <a href="{{ url_for('diar.index') }}" class="nav-item">
+            <span class="nav-icon">📖</span>
+            <span>Diário</span>
+        </a>
+
+        <a href="#" class="nav-item" onclick="alert('Espaço de Meditação está em desenvolvimento!'); return false;">
+            <span class="nav-icon">🧘</span>
+            <span>Meditação</span>
+            <span class="badge-dev">tô com preguiça de fazer juliaaa</span>
+        </a>
+
+        <a href="#" class="nav-item" onclick="alert('Perfil em desenvolvimento!'); return false;">
+            <span class="nav-icon">👤</span>
+            <span>Perfil</span>
+            <span class="badge-dev">esse também juliaaa</span>
+        </a>
+
+        {% if session.get('usuario_id') %}
+            <a href="{{ url_for('usu.logout') }}" class="nav-item">
+                <span class="nav-icon">🚪</span>
+                <span>Sair</span>
+            </a>
+        {% else %}
+            <a href="{{ url_for('home') }}" class="nav-item">
+                <span class="nav-icon">🔑</span>
+                <span>Entrar</span>
+            </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+</body>
 </html>

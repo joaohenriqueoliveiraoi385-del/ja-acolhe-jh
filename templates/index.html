@@ -4,19 +4,20 @@
 
 {% block conteudo %}
 
-   <header>
+    <header>
         <h1>Acolhe</h1>
         <p>Um espaço seguro para acolher, compartilhar e cuidar.</p>
-        <p>
-            <a href="{{ url_for('diar.index') }}" style="font-weight: bold; color: #2c3e50;">📖 Abrir Meu Diário Emocional</a>
-        </p>
+        {% if session.get('usuario_nome') %}
+            <p>Olá, <strong>{{ session.get('usuario_nome') }}</strong>! 
+               <!--| <a href="{{ url_for('diar.index') }}">📖 Meu Diário Emocional</a> 
+                | <a href="{{ url_for('usu.logout') }}">Sair</a>--> 
+            </p>
+        {% endif %}
     </header>
-
-
 
     <section>
         <h2>Compartilhe algo</h2>
-        <form action="{{ url_for('publi.create') }}" method="post">
+        <form action="{{ url_for('publi.create') }}" method="POST">
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" name="titulo" placeholder="Título da publicação" required>
 
@@ -39,7 +40,7 @@
                     {% endif %}
 
                     <div style="margin-top: 10px;">
-                        <form action="{{ url_for('publi.curtir', publi_id=publicacao.id_publi) }}" method="post" style="display: inline;">
+                        <form action="{{ url_for('publi.curtir', publi_id=publicacao.id_publi) }}" method="POST" style="display: inline;">
                             <button type="submit">❤️ Curtir ({{ publicacao.curtidas|length if publicacao.curtidas else 0 }})</button>
                         </form>
                     </div>
@@ -60,7 +61,7 @@
                         <p><small>Nenhum comentário ainda. Seja o primeiro a comentar!</small></p>
                     {% endif %}
 
-                    <form action="{{ url_for('publi.comentar', publi_id=publicacao.id_publi) }}" method="post" style="margin-top: 10px;">
+                    <form action="{{ url_for('publi.comentar', publi_id=publicacao.id_publi) }}" method="POST" style="margin-top: 10px;">
                         <input type="text" name="texto_coment" placeholder="Escreva um comentário..." required style="width: 70%;">
                         <button type="submit">Comentar</button>
                     </form>

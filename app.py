@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template
 
 from db import db
@@ -11,11 +12,14 @@ from routes.diar import diar_bp
 app = Flask(__name__)
 app.secret_key = 'sua_chave_secreta_super_segura'
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///JJ.db"
+# Caminho absoluto para garantir que o SQLite salve sempre na pasta correta do projeto
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "JJ.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
+# Registro dos Blueprints
 app.register_blueprint(Usu_bp, url_prefix="/usuarios")
 app.register_blueprint(publi, url_prefix="/publicacoes")
 app.register_blueprint(diar_bp)

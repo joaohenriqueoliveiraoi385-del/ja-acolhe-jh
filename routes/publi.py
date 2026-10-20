@@ -12,17 +12,16 @@ def create():
 
     titulo = request.form.get("titulo")
     texto = request.form.get("conteudo")
-    
     usu_id = session['usuario_id']
 
-    nova_publi = Publi(
-        titulo_publi=titulo,
-        texto_publi=texto,
-        usu_id=usu_id
-    )
-
-    db.session.add(nova_publi)
-    db.session.commit()
+    if titulo and texto:
+        nova_publi = Publi(
+            titulo_publi=titulo,
+            texto_publi=texto,
+            usu_id=usu_id
+        )
+        db.session.add(nova_publi)
+        db.session.commit()
 
     return redirect(url_for("index"))
 
@@ -34,7 +33,7 @@ def curtir(publi_id):
 
     usu_id = session['usuario_id']
 
-    
+    # Utilizando id_publicacao referente ao model.py
     curtida_existente = Curt.query.filter_by(id_publicacao=publi_id, usu_id=usu_id).first()
 
     if curtida_existente:
@@ -56,7 +55,6 @@ def comentar(publi_id):
     usu_id = session['usuario_id']
 
     if texto_coment and texto_coment.strip():
-       
         novo_comentario = Coment(
             texto_coment=texto_coment,
             id_publicacao=publi_id,

@@ -6,12 +6,12 @@
     <header>
         <h1>Meu Diário Emocional</h1>
         <p>Um espaço privado e seguro para registrar seus sentimentos e pensamentos.</p>
-        <p><a href="{{ url_for('index') }}">← Voltar para o Feed</a></p>
+       <!-- <p><a href="{{ url_for('index') }}">← Voltar para o Feed</a></p>-->
     </header>
 
     <section style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
         <h2>Nova Anotação</h2>
-        <form action="{{ url_for('diar.criar') }}" method="post">
+        <form action="{{ url_for('diar.criar') }}" method="POST">
             <label for="humor">Como você está se sentindo?</label>
             <input type="text" id="humor" name="humor" placeholder="Ex: Feliz, Ansioso, Calmo, Reflexivo..." required>
 

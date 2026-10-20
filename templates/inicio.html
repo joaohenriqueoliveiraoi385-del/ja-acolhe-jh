@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Início | Acolhe{% endblock %}
+
+{% block conteudo %}
+<section class="welcome-section">
+    <div>
+        <p class="eyebrow">SEU ESPAÇO DE ACOLHIMENTO</p>
+        <h1>Olá, {{ session.get('usuario_nome', 'pessoa querida') }}!</h1>
+        <p class="welcome-subtitle">Como você está se sentindo hoje?</p>
+    </div>
+
+    <div class="welcome-decoration">♡</div>
+</section>
+
+<section class="dashboard-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">EXPLORE O ACOLHE</p>
+            <h2>Seu momento de cuidado</h2>
+        </div>
+    </div>
+
+    <div class="activity-grid">
+        <a href="{{ url_for('diar.index') }}" class="activity-card card-pink">
+            <span class="activity-icon">▤</span>
+            <h3>Meu diário</h3>
+            <p>Escreva sobre seus sentimentos em um espaço privado.</p>
+            <span class="card-action">Acessar diário →</span>
+        </a>
+
+        <a href="{{ url_for('index') }}" class="activity-card card-blue">
+            <span class="activity-icon">♡</span>
+            <h3>Comunidade</h3>
+            <p>Compartilhe experiências e leia as publicações.</p>
+            <span class="card-action">Ver comunidade →</span>
+        </a>
+
+        <a href="{{ url_for('diar.index') }}" class="activity-card card-yellow">
+            <span class="activity-icon">✧</span>
+            <h3>Cuide de si</h3>
+            <p>Reserve alguns minutos para olhar para o que você sente.</p>
+            <span class="card-action">Começar →</span>
+        </a>
+
+        <a href="{{ url_for('index') }}" class="activity-card card-purple">
+            <span class="activity-icon">☼</span>
+            <h3>Compartilhe</h3>
+            <p>Às vezes, colocar os pensamentos em palavras ajuda.</p>
+            <span class="card-action">Ir para a comunidade →</span>
+        </a>
+    </div>
+</section>
+
+<section class="selfcare-grid">
+    <div class="quote-card">
+        <span class="eyebrow">UM LEMBRETE PARA VOCÊ</span>
+        <div class="quote-mark">“</div>
+        <p>Você não precisa ter tudo resolvido hoje. Respeite seu tempo e siga um passo de cada vez.</p>
+        <span class="quote-signature">Acolhe ♡</span>
+    </div>
+
+    <div class="reflection-card">
+        <span class="eyebrow">PAUSA PARA REFLETIR</span>
+        <h2>Como foi seu dia?</h2>
+        <p>Você pode começar observando o que está sentindo, sem se julgar por isso.</p>
+
+        <a href="{{ url_for('diar.index') }}" class="primary-button">
+            Escrever no meu diário
+        </a>
+    </div>
+</section>
+{% endblock %}

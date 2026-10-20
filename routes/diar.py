@@ -7,13 +7,11 @@ diar_bp = Blueprint("diar", __name__, url_prefix="/diario")
 
 @diar_bp.route("/", methods=["GET"])
 def index():
-    
     if 'usuario_id' not in session:
         return redirect(url_for("home"))
 
     usu_id = session['usuario_id']
-    
-    
+    # Exibe exclusivamente as anotações do usuário logado
     diarios = Diar.query.filter_by(usu_id=usu_id).order_by(Diar.data_registro.desc()).all()
 
     return render_template("diario.html", diarios=diarios)
