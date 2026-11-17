@@ -7,6 +7,7 @@ from model import Usu, Publi, Curt, Coment, Diar, Int, Not, Rec
 from routes.usu import Usu_bp
 from routes.publi import publi
 from routes.diar import diar_bp
+from routes.meditacao import meditacao_bp
 
 
 app = Flask(__name__)
@@ -23,6 +24,7 @@ db.init_app(app)
 app.register_blueprint(Usu_bp, url_prefix="/usuarios")
 app.register_blueprint(publi, url_prefix="/publicacoes")
 app.register_blueprint(diar_bp)
+app.register_blueprint(meditacao_bp)
 
 
 @app.route("/")
@@ -46,4 +48,4 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-    app.run(debug=True, port=5001)
+    app.run(debug=True)

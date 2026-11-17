@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{% endblock title %}
+{% block title %}Feed | Acolhe{% endblock title %}
 
 {% block conteudo %}
 
@@ -8,10 +8,7 @@
         <h1>Acolhe</h1>
         <p>Um espaço seguro para acolher, compartilhar e cuidar.</p>
         {% if session.get('usuario_nome') %}
-            <p>Olá, <strong>{{ session.get('usuario_nome') }}</strong>! 
-               <!--| <a href="{{ url_for('diar.index') }}">📖 Meu Diário Emocional</a> 
-                | <a href="{{ url_for('usu.logout') }}">Sair</a>--> 
-            </p>
+            <p>Olá, <strong>{{ session.get('usuario_nome') }}</strong>!</p>
         {% endif %}
     </header>
 
@@ -47,29 +44,38 @@
 
                     <hr style="margin: 15px 0;">
 
-                    <h4>Comentários</h4>
-                    {% if publicacao.comentarios %}
-                        <ul style="list-style-type: none; padding-left: 0;">
-                            {% for comentario in publicacao.comentarios %}
-                                <li style="background: #f4f4f4; padding: 8px; margin-bottom: 5px; border-radius: 4px;">
-                                    <strong>{{ comentario.usuario.nome if comentario.usuario else 'Anônimo' }}:</strong>
-                                    {{ comentario.texto_coment }}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p><small>Nenhum comentário ainda. Seja o primeiro a comentar!</small></p>
-                    {% endif %}
+                    <!--  Comentários Retráteis -->
+                    <div class="bloco-comentarios">
+                        <button type="button" class="botao-toggle-comentarios" onclick="alternarComentarios(this)">
+                            💬 Mostrar comentários ({{ publicacao.comentarios|length if publicacao.comentarios else 0 }})
+                        </button>
+                        
+                        <div class="conteudo-comentarios">
+                            {% if publicacao.comentarios %}
+                                <ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">
+                                    {% for comentario in publicacao.comentarios %}
+                                        <li style="background: #f4f4f4; padding: 8px; margin-bottom: 5px; border-radius: 4px;">
+                                            <strong>{{ comentario.usuario.nome if comentario.usuario else 'Anônimo' }}:</strong>
+                                            {{ comentario.texto_coment }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p style="margin-top: 10px;"><small>Nenhum comentário ainda. Seja o primeiro a comentar!</small></p>
+                            {% endif %}
 
-                    <form action="{{ url_for('publi.comentar', publi_id=publicacao.id_publi) }}" method="POST" style="margin-top: 10px;">
-                        <input type="text" name="texto_coment" placeholder="Escreva um comentário..." required style="width: 70%;">
-                        <button type="submit">Comentar</button>
-                    </form>
+                            <form action="{{ url_for('publi.comentar', publi_id=publicacao.id_publi) }}" method="POST" style="margin-top: 10px; display: flex; gap: 8px;">
+                                <input type="text" name="texto_coment" placeholder="Escreva um comentário..." required style="flex: 1; padding: 6px;">
+                                <button type="submit">Comentar</button>
+                            </form>
+                        </div>
+                    </div>
                 </article>
             {% endfor %}
         {% else %}
             <p>Ainda não existem publicações.</p>
         {% endif %}
     </section>
+
 
 {% endblock conteudo %}
