@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Acolhe{% endblock %}</title>
     
-   
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.5">
     
     {% block extra_head %}{% endblock %}
@@ -16,7 +15,6 @@
         {% block conteudo %}{% endblock %}
     </main>
 
-    
     {% if request.endpoint not in ['home', 'usu.create'] %}
     <nav class="bottom-nav">
         <a href="{{ url_for('index') }}" class="nav-item">
@@ -29,16 +27,14 @@
             <span>Diário</span>
         </a>
 
-        <a href="#" class="nav-item" onclick="alert('Espaço de Meditação está em desenvolvimento!'); return false;">
+        <a href="{{ url_for('meditacao.meditacao') }}" class="nav-item">
             <span class="nav-icon">🧘</span>
             <span>Meditação</span>
-            <span class="badge-dev">tô com preguiça de fazer juliaaa</span>
         </a>
 
         <a href="#" class="nav-item" onclick="alert('Perfil em desenvolvimento!'); return false;">
             <span class="nav-icon">👤</span>
             <span>Perfil</span>
-            <span class="badge-dev">esse também juliaaa</span>
         </a>
 
         {% if session.get('usuario_id') %}
@@ -54,6 +50,23 @@
         {% endif %}
     </nav>
     {% endif %}
+
+    <!-- Script Global para os Comentários Retráteis -->
+    <script>
+    function alternarComentarios(botao) {
+        const blocoComentarios = botao.nextElementSibling;
+        blocoComentarios.classList.toggle('ativo');
+
+        const matchQtd = botao.textContent.match(/\d+/);
+        const qtdTotal = matchQtd ? matchQtd[0] : "0";
+
+        if (blocoComentarios.classList.contains('ativo')) {
+            botao.innerHTML = `💬 Ocultar comentários (${qtdTotal})`;
+        } else {
+            botao.innerHTML = `💬 Mostrar comentários (${qtdTotal})`;
+        }
+    }
+    </script>
 
 </body>
 </html>

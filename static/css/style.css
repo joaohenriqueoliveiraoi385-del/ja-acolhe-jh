@@ -429,3 +429,130 @@ main article:not(.publicacao) small {
         min-height: 44px;
     }
 }
+/* Meditação*/
+
+.grade-meditacao {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.cartao-destaque {
+    background: #fdfbf7;
+    border: 1px solid #e2ded8;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* Container do Gráfico de Respiração */
+.container-grafico-respiracao {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 180px;
+    margin: 2rem 0;
+}
+
+.eixo-grafico {
+    width: 220px;
+    height: 100%;
+    border-left: 2px dashed #b8b2a7;
+    border-bottom: 2px solid #b8b2a7;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 10px;
+    position: relative;
+}
+
+.barra-grafico {
+    width: 100%;
+    height: 25%;
+    background-color: #6c8c75;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: height 4s ease-in-out, background-color 4s ease-in-out;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+}
+
+/* Estados de animação do gráfico vertical */
+.barra-grafico.subir {
+    height: 100%;
+    background-color: #52735d;
+}
+
+.barra-grafico.manter-alto {
+    height: 100%;
+    background-color: #3b5343;
+}
+
+.barra-grafico.descer {
+    height: 25%;
+    background-color: #7fa188;
+}
+
+.barra-grafico.manter-baixo {
+    height: 25%;
+    background-color: #6c8c75;
+}
+
+.acoes-centro {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.lista-sessoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.cartao-sessao {
+    background: #ffffff;
+    border: 1px solid #e2ded8;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+/* Comentários Retráteis */
+.bloco-comentarios {
+    margin-top: 1rem;
+    border-top: 1px solid #e2ded8;
+    padding-top: 0.75rem;
+}
+
+.conteudo-comentarios {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease;
+}
+
+.conteudo-comentarios.ativo {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-top: 0.5rem;
+}
+
+.botao-toggle-comentarios {
+    background: none;
+    border: none;
+    color: #52735d;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.botao-toggle-comentarios:hover {
+    text-decoration: underline;
+}

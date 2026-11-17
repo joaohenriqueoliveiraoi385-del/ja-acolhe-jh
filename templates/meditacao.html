@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Meditação e Respiração | Acolhe{% endblock %}
+{% block conteudo %}
+<div class="cabecalho">
+    <div>
+        <span class="etiqueta"></span>
+        <h1>Espaço de Respiração e Meditação</h1>
+        <p>Faça uma pausa, acalme a mente e reconecte-se com o momento presente.</p>
+    </div>
+</div>
+
+<div class="grade-meditacao">
+    <!-- Bloco de Respiração em Formato de Gráfico Dinâmico -->
+    <section class="cartao-destaque">
+        <h2>Exercício de Respiração (Gráfico Dinâmico)</h2>
+        <p>Acompanhe a curva do gráfico para regular o seu ritmo respiratório.</p>
+        
+        <div class="container-grafico-respiracao">
+            <div class="eixo-grafico">
+                <div id="barra-grafico" class="barra-grafico">
+                    <span id="texto-respiracao">Preparar...</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="acoes-centro">
+            <button id="btn-iniciar-respiracao" class="botao" onclick="iniciarRespiracao()">Iniciar Exercício</button>
+            <button id="btn-parar-respiracao" class="botao secundario" onclick="pararRespiracao()" style="display: none;">Parar</button>
+       
+    <!-- </div>
+    </section>
+
+     Sessões Rápidas de Apoio -->
+    <!--<section class="secao-sessoes">
+        <h2>Práticas Rápidas</h2>
+        <div class="lista-sessoes">
+            <article class="cartao-sessao">
+                <h3> Alívio Rápido de Ansiedade</h3>
+                <p>3 minutos focados em soltar a tensão dos ombros e desacelerar os pensamentos acelerados.</p>
+            </article>
+            <article class="cartao-sessao">
+                <h3> Preparação para o Sono</h3>
+                <p>Exercício leve de escaneamento corporal para relaxar o corpo antes de descansar.</p>
+            </article>
+            <article class="cartao-sessao">
+                <h3> Foco e Clareza</h3>
+                <p>Respiração energizante para retomar os estudos ou tarefas com mais clareza mental.</p>
+            </article>
+        </div>
+    </section>
+</div>-->
+
+<script>
+let intervaloRespiracao = null;
+
+function iniciarRespiracao() {
+    const barra = document.getElementById("barra-grafico");
+    const texto = document.getElementById("texto-respiracao");
+    const btnIniciar = document.getElementById("btn-iniciar-respiracao");
+    const btnParar = document.getElementById("btn-parar-respiracao");
+
+    btnIniciar.style.display = "none";
+    btnParar.style.display = "inline-block";
+
+    const fases = [
+        { texto: "Inspire...", classe: "subir", duracao: 4000 },
+        { texto: "Segure...", classe: "manter-alto", duracao: 4000 },
+        { texto: "Expire...", classe: "descer", duracao: 4000 },
+        { texto: "Aguarde...", classe: "manter-baixo", duracao: 4000 }
+    ];
+
+    let indiceFase = 0;
+
+    function executarFase() {
+        const faseAtual = fases[indiceFase];
+        texto.innerText = faseAtual.texto;
+        
+        barra.className = "barra-grafico " + faseAtual.classe;
+
+        intervaloRespiracao = setTimeout(() => {
+            indiceFase = (indiceFase + 1) % fases.length;
+            executarFase();
+        }, faseAtual.duracao);
+    }
+
+    executarFase();
+}
+
+function pararRespiracao() {
+    clearTimeout(intervaloRespiracao);
+    const barra = document.getElementById("barra-grafico");
+    const texto = document.getElementById("texto-respiracao");
+    const btnIniciar = document.getElementById("btn-iniciar-respiracao");
+    const btnParar = document.getElementById("btn-parar-respiracao");
+
+    barra.className = "barra-grafico";
+    texto.innerText = "Preparar...";
+    btnIniciar.style.display = "inline-block";
+    btnParar.style.display = "none";
+}
+</script>
+{% endblock %}
