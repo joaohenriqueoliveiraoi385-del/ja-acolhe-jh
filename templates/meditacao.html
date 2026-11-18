@@ -1,102 +1,186 @@
 {% extends "base.html" %}
-{% block title %}Meditação e Respiração | Acolhe{% endblock %}
-{% block conteudo %}
-<div class="cabecalho">
-    <div>
-        <span class="etiqueta"></span>
-        <h1>Espaço de Respiração e Meditação</h1>
-        <p>Faça uma pausa, acalme a mente e reconecte-se com o momento presente.</p>
-    </div>
-</div>
 
-<div class="grade-meditacao">
-    <!-- Bloco de Respiração em Formato de Gráfico Dinâmico -->
-    <section class="cartao-destaque">
-        <h2>Exercício de Respiração (Gráfico Dinâmico)</h2>
-        <p>Acompanhe a curva do gráfico para regular o seu ritmo respiratório.</p>
-        
-        <div class="container-grafico-respiracao">
-            <div class="eixo-grafico">
-                <div id="barra-grafico" class="barra-grafico">
-                    <span id="texto-respiracao">Preparar...</span>
-                </div>
+{% block title %}Autocuidado & Meditação | Acolhe{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/meditacao.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="container-meditacao">
+    <div class="cabecalho-meditacao">
+        <span class="etiqueta">BEM-ESTAR</span>
+        <h1>Espaço de Autocuidado</h1>
+        <p>Respire fundo e tire alguns minutos para cuidar da sua mente.</p>
+    </div>
+
+    <!-- SEÇÃO 1: Respiração Guiada Interativa -->
+    <section class="card-meditacao">
+        <h2>🌬️ Respiração Guiada (Box Breathing)</h2>
+        <p style="margin-bottom: 1.5rem;">Acompanhe o ritmo do círculo para acalmar a ansiedade.</p>
+
+        <!-- Círculo de Animação da Respiração -->
+        <div class="wrapper-circulo">
+            <div id="circulo-respiracao" class="circulo-respiracao">
+                <span id="texto-respiracao">Pronto</span>
             </div>
         </div>
-        
-        <div class="acoes-centro">
-            <button id="btn-iniciar-respiracao" class="botao" onclick="iniciarRespiracao()">Iniciar Exercício</button>
-            <button id="btn-parar-respiracao" class="botao secundario" onclick="pararRespiracao()" style="display: none;">Parar</button>
-       
-    <!-- </div>
+
+        <!-- Botão Único para Iniciar / Parar -->
+        <button type="button" onclick="alternarRespiracao()" id="btn-respirar" class="btn-acao-principal">
+            Iniciar Exercício 🌿
+        </button>
     </section>
 
-     Sessões Rápidas de Apoio -->
-    <!--<section class="secao-sessoes">
-        <h2>Práticas Rápidas</h2>
-        <div class="lista-sessoes">
-            <article class="cartao-sessao">
-                <h3> Alívio Rápido de Ansiedade</h3>
-                <p>3 minutos focados em soltar a tensão dos ombros e desacelerar os pensamentos acelerados.</p>
-            </article>
-            <article class="cartao-sessao">
-                <h3> Preparação para o Sono</h3>
-                <p>Exercício leve de escaneamento corporal para relaxar o corpo antes de descansar.</p>
-            </article>
-            <article class="cartao-sessao">
-                <h3> Foco e Clareza</h3>
-                <p>Respiração energizante para retomar os estudos ou tarefas com mais clareza mental.</p>
-            </article>
+    <!-- SEÇÃO 2: Temporizador de Meditação Silenciosa -->
+    <section class="card-meditacao-branco">
+        <h2>🧘 Temporizador de Meditação</h2>
+        <p style="margin-bottom: 1rem;">Escolha o tempo desejado para sua pausa:</p>
+
+        <!-- Botões de Escolha de Tempo -->
+        <div class="grupo-botoes-tempo">
+            <button type="button" onclick="definirTempo(3)" class="btn-tempo">3 min</button>
+            <button type="button" onclick="definirTempo(5)" class="btn-tempo">5 min</button>
+            <button type="button" onclick="definirTempo(10)" class="btn-tempo">10 min</button>
+        </div>
+
+        <!-- Display do Cronômetro -->
+        <div id="display-timer" class="display-timer">
+            05:00
+        </div>
+
+        <div class="grupo-botoes-timer">
+            <button type="button" onclick="alternarTimer()" id="btn-iniciar-timer" class="btn-acao-principal">
+                Iniciar ▶
+            </button>
+            <button type="button" onclick="resetarTimer()" class="btn-zerar-timer">
+                Zerar 🔄
+            </button>
         </div>
     </section>
-</div>-->
+</div>
 
+<!-- Scripts dos Recursos Interativos -->
 <script>
-let intervaloRespiracao = null;
+// --- Lógica Unificada da Respiração Guiada ---
+let intervalRespiracao = null;
+let timeoutRespiracaoFim = null;
+let respirandoAtivo = false;
 
-function iniciarRespiracao() {
-    const barra = document.getElementById("barra-grafico");
-    const texto = document.getElementById("texto-respiracao");
-    const btnIniciar = document.getElementById("btn-iniciar-respiracao");
-    const btnParar = document.getElementById("btn-parar-respiracao");
+function alternarRespiracao() {
+    const circulo = document.getElementById('circulo-respiracao');
+    const texto = document.getElementById('texto-respiracao');
+    const btn = document.getElementById('btn-respirar');
 
-    btnIniciar.style.display = "none";
-    btnParar.style.display = "inline-block";
+    if (!respirandoAtivo) {
+        respirandoAtivo = true;
+        btn.textContent = 'Parar 🛑';
+        btn.style.background = '#a13e67';
 
-    const fases = [
-        { texto: "Inspire...", classe: "subir", duracao: 4000 },
-        { texto: "Segure...", classe: "manter-alto", duracao: 4000 },
-        { texto: "Expire...", classe: "descer", duracao: 4000 },
-        { texto: "Aguarde...", classe: "manter-baixo", duracao: 4000 }
-    ];
+        const executarCiclo = () => {
+            texto.textContent = "Inspire...";
+            circulo.style.transform = "scale(1.35)";
+            circulo.style.background = "#e6dcfc";
 
-    let indiceFase = 0;
+            setTimeout(() => {
+                if (respirandoAtivo) texto.textContent = "Segure";
+            }, 4000);
 
-    function executarFase() {
-        const faseAtual = fases[indiceFase];
-        texto.innerText = faseAtual.texto;
-        
-        barra.className = "barra-grafico " + faseAtual.classe;
+            setTimeout(() => {
+                if (respirandoAtivo) {
+                    texto.textContent = "Expire...";
+                    circulo.style.transform = "scale(1)";
+                    circulo.style.background = "#f3eefc";
+                }
+            }, 8000);
 
-        intervaloRespiracao = setTimeout(() => {
-            indiceFase = (indiceFase + 1) % fases.length;
-            executarFase();
-        }, faseAtual.duracao);
+            setTimeout(() => {
+                if (respirandoAtivo) texto.textContent = "Aguarde";
+            }, 12000);
+        };
+
+        executarCiclo();
+        intervalRespiracao = setInterval(executarCiclo, 16000);
+
+        timeoutRespiracaoFim = setTimeout(() => {
+            pararRespiracao();
+            texto.textContent = "Concluído! 💜";
+        }, 48000);
+
+    } else {
+        pararRespiracao();
+        texto.textContent = "Pronto";
     }
-
-    executarFase();
 }
 
 function pararRespiracao() {
-    clearTimeout(intervaloRespiracao);
-    const barra = document.getElementById("barra-grafico");
-    const texto = document.getElementById("texto-respiracao");
-    const btnIniciar = document.getElementById("btn-iniciar-respiracao");
-    const btnParar = document.getElementById("btn-parar-respiracao");
+    const circulo = document.getElementById('circulo-respiracao');
+    const btn = document.getElementById('btn-respirar');
 
-    barra.className = "barra-grafico";
-    texto.innerText = "Preparar...";
-    btnIniciar.style.display = "inline-block";
-    btnParar.style.display = "none";
+    clearInterval(intervalRespiracao);
+    clearTimeout(timeoutRespiracaoFim);
+    respirandoAtivo = false;
+
+    circulo.style.transform = "scale(1)";
+    circulo.style.background = "#f3eefc";
+    btn.textContent = 'Iniciar Exercício 🌿';
+    btn.style.background = '#7950ad';
+}
+
+// --- temporizador ---
+let tempoRestante = 300; // 5 minutos padrão
+let timerId = null;
+let rodando = false;
+
+function definirTempo(minutos) {
+    if (rodando) return;
+    tempoRestante = minutos * 60;
+    atualizarDisplayTimer();
+}
+
+function atualizarDisplayTimer() {
+    const mins = Math.floor(tempoRestante / 60);
+    const secs = tempoRestante % 60;
+    document.getElementById('display-timer').textContent = 
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+function alternarTimer() {
+    const btn = document.getElementById('btn-iniciar-timer');
+    
+    if (!rodando) {
+        rodando = true;
+        btn.textContent = 'Pausar ⏸';
+        btn.style.background = '#a13e67';
+
+        timerId = setInterval(() => {
+            if (tempoRestante > 0) {
+                tempoRestante--;
+                atualizarDisplayTimer();
+            } else {
+                clearInterval(timerId);
+                rodando = false;
+                btn.textContent = 'Iniciar ▶';
+                btn.style.background = '#7950ad';
+                alert("Parabéns por concluir sua sessão de meditação! 💜✨");
+            }
+        }, 1000);
+    } else {
+        clearInterval(timerId);
+        rodando = false;
+        btn.textContent = 'Continuar ▶';
+        btn.style.background = '#7950ad';
+    }
+}
+
+function resetarTimer() {
+    clearInterval(timerId);
+    rodando = false;
+    tempoRestante = 300;
+    atualizarDisplayTimer();
+    const btn = document.getElementById('btn-iniciar-timer');
+    btn.textContent = 'Iniciar ▶';
+    btn.style.background = '#7950ad';
 }
 </script>
-{% endblock %}
+{% endblock conteudo %}

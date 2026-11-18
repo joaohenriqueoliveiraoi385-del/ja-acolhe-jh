@@ -1,0 +1,143 @@
+/* Estilos específicos para a página de Autocuidado e Meditação */
+
+.container-meditacao {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cabecalho-meditacao {
+    margin-bottom: 1.5rem;
+}
+
+.cabecalho-meditacao .etiqueta {
+    font-size: 0.75rem;
+    font-weight: bold;
+    background: #f3eefc;
+    color: #7950ad;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.cabecalho-meditacao h1 {
+    margin: 4px 0 0 0;
+    color: #57377f;
+    font-size: 24px;
+}
+
+.cabecalho-meditacao p {
+    margin: 4px 0 0 0;
+    color: #766b83;
+    font-size: 0.95rem;
+}
+
+.card-meditacao {
+    background: #fdfbff;
+    border: 1px solid #e9e0f1;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.card-meditacao-branco {
+    background: #ffffff;
+    border: 1px solid #e9e0f1;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.card-meditacao h2 {
+    color: #57377f;
+    font-size: 1.2rem;
+    margin-top: 0;
+}
+
+.card-meditacao-branco h2 {
+    color: #57377f;
+    font-size: 1.2rem;
+    margin-top: 0;
+}
+
+.card-meditacao p, .card-meditacao-branco p {
+    color: #766b83;
+    font-size: 0.9rem;
+}
+
+/* Círculo de Respiração */
+.wrapper-circulo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 160px;
+    margin-bottom: 1rem;
+}
+
+.circulo-respiracao {
+    width: 110px;
+    height: 110px;
+    background: #f3eefc;
+    border: 3px solid #7950ad;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 4s ease-in-out;
+    box-shadow: 0 0 20px rgba(121, 80, 173, 0.15);
+}
+
+.circulo-respiracao span {
+    font-weight: bold;
+    color: #57377f;
+    font-size: 0.85rem;
+}
+
+/* Botões customizados */
+.btn-acao-principal {
+    background: #7950ad;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.grupo-botoes-tempo {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.btn-tempo {
+    background: #f3eefc;
+    color: #57377f;
+    border: 1px solid #ded3e9;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.display-timer {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #57377f;
+    margin: 15px 0;
+}
+
+.grupo-botoes-timer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-zerar-timer {
+    background: #ded3e9;
+    color: #332b40;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+}
