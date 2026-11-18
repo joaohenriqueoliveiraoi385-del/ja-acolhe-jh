@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Notificações | Acolhe{% endblock title %}
+
+{% block conteudo %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div>
+        <span class="etiqueta">AVISOS</span>
+        <h1 style="margin: 4px 0 0 0; color: #57377f;">Notificações</h1>
+    </div>
+
+    {% if notificacoes %}
+    <form action="{{ url_for('notificacoes.limpar') }}" method="POST" style="margin: 0;">
+        <button type="submit" style="margin: 0; padding: 8px 14px; font-size: 0.85rem; background: #fff1f6; color: #a13e67; border: 1px solid #f0d5e1;">
+            Limpar tudo 🗑️
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+<section>
+    {% if notificacoes %}
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            {% for n in notificacoes %}
+                <div style="padding: 16px; border-radius: 14px; border: 1px solid #e9e0f1; background: #fdfbff; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; color: #57377f; font-size: 15px;">{{ n.titulo_not }}</h4>
+                        <p style="margin: 0 0 6px 0; color: #554b60; font-size: 14px;">{{ n.mensagem_not }}</p>
+                        <small style="color: #a197ad; font-size: 11px;">
+                            {{ n.data_not.strftime('%d/%m/%Y às %H:%M') if n.data_not else '' }}
+                        </small>
+                    </div>
+
+                    {% if n.link %}
+                        <a href="{{ n.link }}" style="padding: 8px 14px; background: #f3eefc; color: #57377f; border-radius: 10px; font-size: 0.85rem; white-space: nowrap; text-decoration: none;">
+                            Ver →
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2rem 1rem; color: #766b83;">
+            <span style="font-size: 2.5rem; display: block; margin-bottom: 10px;">🔔</span>
+            <p style="margin: 0;">Você não tem nenhuma notificação no momento.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock conteudo %}

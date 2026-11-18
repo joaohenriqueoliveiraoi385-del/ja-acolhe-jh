@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Comunidade & Grupos | Acolhe{% endblock title %}
+
+{% block conteudo %}
+<div class="cabecalho" style="margin-bottom: 2rem;">
+    <span class="etiqueta"></span>
+    <h1>Grupos de Apoio</h1>
+    <p>Participe de conversas seguras ou crie um espaço para acolher outras pessoas.</p>
+</div>
+
+<!-- Formulário para Criar Novo Grupo -->
+<section style="margin-bottom: 2rem; background: #fdfbff;">
+    <h2>Criar um Novo Grupo</h2>
+    <form action="{{ url_for('grupo.criar') }}" method="POST">
+        <label for="nome_grupo">Nome do Grupo:</label>
+        <input type="text" id="nome_grupo" name="nome_grupo" placeholder="Ex: Apoio Acadêmico, Ansiedade, Leitura..." required>
+
+        <label for="descricao_grupo">Descrição:</label>
+        <textarea id="descricao_grupo" name="descricao_grupo" placeholder="Sobre o que é este grupo e quem ele acolhe..." required style="min-height: 80px;"></textarea>
+
+        <label for="tipo">Tipo de Grupo:</label>
+        <select name="tipo" id="tipo" style="padding: 12px; border-radius: 12px; border: 1px solid #ded3e9; background: #fcfaff; font-family: inherit;">
+            <option value="aberto">🔓 Aberto (Qualquer um entra instantaneamente)</option>
+            <option value="fechado">🔒 Fechado (Requer aprovação do criador)</option>
+        </select>
+
+        <button type="submit" style="margin-top: 10px;">Criar Grupo</button>
+    </form>
+</section>
+
+<!-- Lista de Grupos -->
+<section>
+    <h2>Grupos Disponíveis</h2>
+    {% if grupos %}
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+            {% for g in grupos %}
+                <div style="border: 1px solid #e9e0f1; padding: 1.2rem; border-radius: 16px; background: #fff; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 style="margin: 0; color: #57377f;">{{ g.nome_grupo }}</h3>
+                            <span style="font-size: 0.75rem; background: {% if g.tipo == 'aberto' %}#eef6fc{% else %}#fff0f3{% endif %}; color: {% if g.tipo == 'aberto' %}#2e6b9e{% else %}#8c3b53{% endif %}; padding: 2px 8px; border-radius: 6px; font-weight: 600;">
+                                {{ '🔓 Aberto' if g.tipo == 'aberto' else '🔒 Fechado' }}
+                            </span>
+                        </div>
+                        <p style="margin: 6px 0; color: #554b60; font-size: 0.95rem;">{{ g.descricao_grupo }}</p>
+                        <small style="color: #766b83;">Criado por <strong>{{ g.criador.nome }}</strong></small>
+                    </div>
+
+                    <div>
+                        {% set status = participacoes.get(g.id_grupo) %}
+                        {% if g.criador_id == usuario_id or status == 'aprovado' %}
+                            <a href="{{ url_for('grupo.chat', grupo_id=g.id_grupo) }}" class="botao" style="text-decoration: none; padding: 10px 16px; background: #57377f; color: #fff; border-radius: 10px; font-size: 0.9rem; display: inline-block;">Entrar no Chat 💬</a>
+                        {% elif status == 'pendente' %}
+                            <span style="background: #fff3cd; color: #856404; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;">⏳ Aguardando aprovação</span>
+                        {% else %}
+                            <form action="{{ url_for('grupo.entrar', grupo_id=g.id_grupo) }}" method="POST" style="margin:0;">
+                                <button type="submit" style="margin:0; padding: 10px 16px; font-size: 0.9rem;">Participar</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #666; margin-top: 1rem;">Nenhum grupo criado ainda. Seja o primeiro a criar um!</p>
+    {% endif %}
+</section>
+{% endblock conteudo %}

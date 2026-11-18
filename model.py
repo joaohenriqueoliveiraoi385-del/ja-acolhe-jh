@@ -101,8 +101,11 @@ class Not(db.Model):
     __tablename__ = 'notificacoes'
 
     id_not = db.Column(db.Integer, primary_key=True)
-    mensagem_not = db.Column(db.String(300), nullable=False)
     titulo_not = db.Column(db.String(200), nullable=False)
+    mensagem_not = db.Column(db.String(300), nullable=False)
+    lida = db.Column(db.Boolean, default=False)
+    link = db.Column(db.String(200), nullable=True)
+    data_not = db.Column(db.DateTime, default=db.func.now())
 
     usu_id = db.Column(
         db.Integer,
@@ -118,3 +121,41 @@ class Rec(db.Model):
     titulo_rec = db.Column(db.String(250), nullable=False)
     descricao_rec = db.Column(db.String(500), nullable=False)
     tipo = db.Column(db.String(75), nullable=False)
+
+
+class Grupo(db.Model):
+    __tablename__ = 'grupos'
+
+    id_grupo = db.Column(db.Integer, primary_key=True)
+    nome_grupo = db.Column(db.String(100), nullable=False)
+    descricao_grupo = db.Column(db.String(300), nullable=False)
+    tipo = db.Column(db.String(20), default='aberto')
+    criador_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usu'), nullable=False)
+    data_criacao = db.Column(db.DateTime, default=db.func.now())
+
+    criador = db.relationship('Usu', backref='grupos_criados')
+    membros = db.relationship('GrupoMembro', backref='grupo', cascade="all, delete-orphan", lazy=True)
+    mensagens = db.relationship('MensagemGrupo', backref='grupo', cascade="all, delete-orphan", lazy=True)
+
+
+class GrupoMembro(db.Model):
+    __tablename__ = 'grupo_membros'
+
+    id_membro = db.Column(db.Integer, primary_key=True)
+    grupo_id = db.Column(db.Integer, db.ForeignKey('grupos.id_grupo'), nullable=False)
+    usu_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usu'), nullable=False)
+    status = db.Column(db.String(20), default='aprovado')
+
+    usuario = db.relationship('Usu', backref='participacoes_grupos')
+
+
+class MensagemGrupo(db.Model):
+    __tablename__ = 'grupo_mensagens'
+
+    id_msg = db.Column(db.Integer, primary_key=True)
+    texto = db.Column(db.String(500), nullable=False)
+    data_envio = db.Column(db.DateTime, default=db.func.now())
+    grupo_id = db.Column(db.Integer, db.ForeignKey('grupos.id_grupo'), nullable=False)
+    usu_id = db.Column(db.Integer, db.ForeignKey('usuarios.id_usu'), nullable=False)
+
+    usuario = db.relationship('Usu', backref='mensagens_grupo')

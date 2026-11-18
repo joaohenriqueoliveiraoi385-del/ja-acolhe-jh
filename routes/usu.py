@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from db import db
-from model import Usu
+from model import Usu, Publi
 
 Usu_bp = Blueprint("usu", __name__)
 
@@ -31,7 +31,7 @@ def create():
             db.session.commit()
             print(f"✅ Usuário '{nome}' (ID: {novo_usuario.id_usu}) cadastrado com sucesso!")
             
-            # Login automático após o cadastro
+            # Login automático 
             session['usuario_id'] = novo_usuario.id_usu
             session['usuario_nome'] = novo_usuario.nome
             return redirect(url_for("index"))
@@ -67,3 +67,24 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("home"))
+
+
+@Usu_bp.route("/perfil")
+def perfil():
+    usuario_id = session.get('usuario_id')
+    
+    if not usuario_id:
+        return redirect(url_for('home'))
+    
+    usuario = Usu.query.get(usuario_id)
+    publicacoes_usuario = (
+        Publi.query.filter_by(usu_id=usuario_id)
+        .order_by(Publi.data_publi.desc())
+        .all()
+    )
+    
+    return render_template(
+        "perfil.html",
+        usuario=usuario,
+        publicacoes=publicacoes_usuario
+    )

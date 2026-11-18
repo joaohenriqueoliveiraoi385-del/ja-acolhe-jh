@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{{ grupo.nome_grupo }} | Acolhe{% endblock title %}
+
+{% block conteudo %}
+<div style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+    <div>
+        <a href="{{ url_for('grupo.listar') }}" style="font-size: 0.9rem; color: #7950ad; text-decoration: none;">← Voltar para Grupos</a>
+        <h1 style="margin: 4px 0 0 0; color: #57377f;">{{ grupo.nome_grupo }}</h1>
+        <p style="margin: 0; color: #766b83; font-size: 0.9rem;">{{ grupo.descricao_grupo }}</p>
+    </div>
+    <span style="font-size: 0.8rem; background: #eef6fc; color: #2e6b9e; padding: 4px 10px; border-radius: 8px; font-weight: 600;">
+        {{ '🔓 Grupo Aberto' if grupo.tipo == 'aberto' else '🔒 Grupo Fechado' }}
+    </span>
+</div>
+
+<!-- Painel do Criador para Aprovar Membros Pendentes -->
+{% if membros_pendentes and grupo.criador_id == usuario_id %}
+<section style="background: #fffbe6; border: 1px solid #ffeeba; margin-bottom: 20px; padding: 15px; border-radius: 14px;">
+    <h3 style="color: #8c732b; margin-top: 0; font-size: 16px;">Solicitações pendentes de entrada:</h3>
+    <ul style="list-style: none; padding: 0; margin: 0;">
+        {% for p in membros_pendentes %}
+            <li style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px;">
+                <span><strong>{{ p.usuario.nome }}</strong> quer participar do grupo.</span>
+                <form action="{{ url_for('grupo.aprovar_membro', grupo_id=grupo.id_grupo, membro_id=p.id_membro) }}" method="POST" style="margin:0;">
+                    <button type="submit" style="margin:0; padding: 6px 12px; font-size: 0.8rem; background: #28a745;">Aprovar ✅</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+<!-- Área do Chat Interativo -->
+<section style="display: flex; flex-direction: column; height: 500px; padding: 15px; background: #fdfbff;">
+    <h2>Chat da Comunidade</h2>
+    
+    <!-- Caixa de Mensagens -->
+    <div style="flex: 1; overflow-y: auto; border: 1px solid #e9e0f1; border-radius: 12px; padding: 15px; background: #ffffff; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+        {% if mensagens %}
+            {% for msg in mensagens %}
+                <div style="max-width: 75%; padding: 10px 14px; border-radius: 12px; background: {% if msg.usu_id == usuario_id %}#f3eefc{% else %}#f5f0fa{% endif %}; align-self: {% if msg.usu_id == usuario_id %}flex-end{% else %}flex-start{% endif %}; border: 1px solid #e9e0f1;">
+                    <small style="display: block; font-weight: bold; color: #57377f; margin-bottom: 3px;">
+                        {{ msg.usuario.nome }} {% if msg.usu_id == grupo.criador_id %}(Criador){% endif %}
+                    </small>
+                    <p style="margin: 0; color: #332b40; word-break: break-word;">{{ msg.texto }}</p>
+                    <span style="font-size: 10px; color: #a197ad; float: right; margin-top: 4px;">{{ msg.data_envio.strftime('%H:%M') }}</span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; color: #888; margin: auto;">
+                <p>Nenhuma mensagem por aqui ainda. Seja o primeiro a enviar uma mensagem no grupo! 💬</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Formulário de Envio de Mensagem -->
+    <form action="{{ url_for('grupo.enviar_mensagem', grupo_id=grupo.id_grupo) }}" method="POST" style="display: flex; gap: 8px; margin: 0;">
+        <input type="text" name="texto" placeholder="Escreva sua mensagem com carinho..." required style="flex: 1; margin: 0; padding: 12px;">
+        <button type="submit" style="margin: 0; padding: 0 20px;">Enviar 🚀</button>
+    </form>
+</section>
+{% endblock conteudo %}

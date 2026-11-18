@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil | Acolhe{% endblock title %}
+
+{% block conteudo %}
+<div class="cabecalho" style="margin-bottom: 2rem;">
+    <span class="etiqueta"></span>
+    <h1>Meu Perfil</h1>
+    <p>Gerencie suas informações e acompanhe suas contribuições na comunidade.</p>
+</div>
+
+
+<section class="cartao-perfil" style="background: #fdfbf7; border: 1px solid #e2ded8; border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 60px; height: 60px; background: #52735d; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">
+            {{ usuario.nome[0] | upper if usuario.nome else 'U' }}
+        </div>
+        <div>
+            <h2 style="margin: 0; color: #333;">{{ usuario.nome }}</h2>
+            <p style="margin: 0.25rem 0 0 0; color: #666; font-size: 0.95rem;">{{ usuario.gmail }}</p>
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <h2>Minhas Publicações ({{ publicacoes|length }})</h2>
+    {% if publicacoes %}
+        <div style="margin-top: 1rem;">
+            {% for publicacao in publicacoes %}
+                <article class="publicacao" style="border: 1px solid #e2ded8; padding: 15px; margin-bottom: 15px; border-radius: 8px; background: #fff;">
+                    <h3>{{ publicacao.titulo_publi }}</h3>
+                    <p>{{ publicacao.texto_publi }}</p>
+                    <small style="color: #666;">
+                        ❤️ {{ publicacao.curtidas|length if publicacao.curtidas else 0 }} curtidas · 
+                        💬 {{ publicacao.comentarios|length if publicacao.comentarios else 0 }} comentários
+                    </small>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="background: #f9f9f9; padding: 2rem; border-radius: 8px; text-align: center; border: 1px dashed #ccc; margin-top: 1rem;">
+            <p style="color: #666; margin-bottom: 1rem;">Você ainda não fez nenhuma publicação.</p>
+            <a href="{{ url_for('index') }}" class="botao" style="text-decoration: none; background: #52735d; color: white; padding: 8px 16px; border-radius: 6px;">Ir para o Feed</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock conteudo %}

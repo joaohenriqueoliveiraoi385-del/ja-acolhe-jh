@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Acolhe{% endblock %}</title>
     
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.5">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.6">
     
     {% block extra_head %}{% endblock %}
 </head>
@@ -17,22 +17,27 @@
 
     {% if request.endpoint not in ['home', 'usu.create'] %}
     <nav class="bottom-nav">
-        <a href="{{ url_for('index') }}" class="nav-item">
+        <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
             <span class="nav-icon">🏠</span>
-            <span>Feed</span>
+            <span>Início</span>
         </a>
 
-        <a href="{{ url_for('diar.index') }}" class="nav-item">
+        <a href="{{ url_for('diar.index') }}" class="nav-item {% if request.endpoint and request.endpoint.startswith('diar.') %}active{% endif %}">
             <span class="nav-icon">📖</span>
             <span>Diário</span>
         </a>
 
-        <a href="{{ url_for('meditacao.meditacao') }}" class="nav-item">
+        <a href="{{ url_for('grupo.listar') }}" class="nav-item {% if request.endpoint and request.endpoint.startswith('grupo.') %}active{% endif %}">
+            <span class="nav-icon">👥</span>
+            <span>Comunidade</span>
+        </a>
+
+        <a href="{{ url_for('meditacao.meditacao') }}" class="nav-item {% if request.endpoint and request.endpoint.startswith('meditacao.') %}active{% endif %}">
             <span class="nav-icon">🧘</span>
             <span>Meditação</span>
         </a>
 
-        <a href="#" class="nav-item" onclick="alert('Perfil em desenvolvimento!'); return false;">
+        <a href="{{ url_for('usu.perfil') }}" class="nav-item {% if request.endpoint == 'usu.perfil' %}active{% endif %}">
             <span class="nav-icon">👤</span>
             <span>Perfil</span>
         </a>
@@ -51,7 +56,7 @@
     </nav>
     {% endif %}
 
-    <!-- Script Global para os Comentários Retráteis -->
+    <!-- Script Comentários retráteis -->
     <script>
     function alternarComentarios(botao) {
         const blocoComentarios = botao.nextElementSibling;

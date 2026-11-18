@@ -1,18 +1,88 @@
 {% extends "base.html" %}
 
-{% block title %}Feed | Acolhe{% endblock title %}
+{% block title %}Início | Acolhe{% endblock title %}
 
 {% block conteudo %}
 
-    <header>
-        <h1>Acolhe</h1>
-        <p>Um espaço seguro para acolher, compartilhar e cuidar.</p>
-        {% if session.get('usuario_nome') %}
-            <p>Olá, <strong>{{ session.get('usuario_nome') }}</strong>!</p>
-        {% endif %}
-    </header>
+    <!-- Cabeçalho com Saudação Personalizada, Sino de Notificações e Avatar -->
+    <div class="cabecalho-boas-vindas">
+        <div>
+            <h1 style="font-size: 28px; margin: 0; color: #57377f;">
+                Olá, {{ session.get('usuario_nome', 'Visitante') }}! 💜
+            </h1>
+            <p style="margin: 4px 0 0 0; color: #766b83; font-size: 14px;">
+                Como você está se sentindo hoje?
+            </p>
+        </div>
 
-    <section>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="{{ url_for('notificacoes.listar') }}" style="position: relative; width: 45px; height: 45px; background: #ffffff; border: 1px solid #e9e0f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; box-shadow: 0 3px 10px rgba(75, 47, 105, 0.05);">
+                🔔
+                {% if notificacoes_nao_lidas > 0 %}
+                    <span style="position: absolute; top: -2px; right: -2px; background: #e74c3c; color: #fff; font-size: 11px; font-weight: bold; width: 19px; height: 19px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        {{ notificacoes_nao_lidas }}
+                    </span>
+                {% endif %}
+            </a>
+
+            <a href="{{ url_for('usu.perfil') }}" class="perfil-avatar" style="text-decoration: none;">
+                {{ session.get('usuario_nome', 'U')[0] | upper }}
+            </a>
+        </div>
+    </div>
+
+    <!-- Barra de Atalho / Pesquisa -->
+    <div class="barra-pesquisa-fake">
+        <span style="color: #7950ad;">🔍</span>
+        <input type="text" placeholder="Compartilhe seus sentimentos..." readonly onclick="window.location.href='#criar-publi'">
+    </div>
+
+    <!-- Grade de Atividades (Cards Coloridos) -->
+    <div class="grade-atividades">
+        <a href="{{ url_for('diar.index') }}" class="cartao-atividade diario">
+            <span class="icone-card">📖</span>
+            <h3>Meu Diário</h3>
+            <p>Registre seus pensamentos</p>
+        </a>
+
+        <a href="{{ url_for('grupo.listar') }}" class="cartao-atividade comunidade">
+            <span class="icone-card">👥</span>
+            <h3>Comunidade</h3>
+            <p>Compartilhe e conecte-se</p>
+        </a>
+
+        <a href="{{ url_for('meditacao.meditacao') }}" class="cartao-atividade autocuidado">
+            <span class="icone-card">🧘</span>
+            <h3>Autocuidado</h3>
+            <p>Cuide da sua mente e bem-estar</p>
+        </a>
+
+        <a href="{{ url_for('usu.perfil') }}" class="cartao-atividade recursos">
+            <span class="icone-card">👤</span>
+            <h3>Meu Perfil</h3>
+            <p>Acompanhe suas atividades</p>
+        </a>
+    </div>
+
+    <!-- Seção: Destaques com a Frase Motivacional Aleatória -->
+    <div style="margin-bottom: 24px;">
+        <div class="secao-topo-flex">
+            <h2>Destaques para você</h2>
+            <a href="#">Ver mais ></a>
+        </div>
+        
+        <div class="card-destaque-horizontal">
+            <div class="placeholder-img-destaque">💡</div>
+            <div class="info-destaque" style="flex: 1;">
+                <h4>Inspiração do Dia</h4>
+                <p style="color: #57377f; font-weight: 500; margin: 0;">{{ frase_do_dia }}</p>
+            </div>
+            <span style="color: #7950ad; font-weight: bold; font-size: 1.2rem;">✨</span>
+        </div>
+    </div>
+
+    <!-- Seção de Formulário para Criar Publicação -->
+    <section id="criar-publi" style="margin-top: 20px;">
         <h2>Compartilhe algo</h2>
         <form action="{{ url_for('publi.create') }}" method="POST">
             <label for="titulo">Título:</label>
@@ -25,11 +95,12 @@
         </form>
     </section>
 
+    <!-- Seção de Publicações da Comunidade -->
     <section>
-        <h2>Publicações</h2>
+        <h2>Publicações da Comunidade</h2>
         {% if publicacoes %}
             {% for publicacao in publicacoes %}
-                <article class="publicacao" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
+                <article class="publicacao">
                     <h3>{{ publicacao.titulo_publi }}</h3>
                     <p>{{ publicacao.texto_publi }}</p>
                     {% if publicacao.usuario %}
@@ -44,7 +115,7 @@
 
                     <hr style="margin: 15px 0;">
 
-                    <!--  Comentários Retráteis -->
+                    <!-- Seção de Comentários Retráteis -->
                     <div class="bloco-comentarios">
                         <button type="button" class="botao-toggle-comentarios" onclick="alternarComentarios(this)">
                             💬 Mostrar comentários ({{ publicacao.comentarios|length if publicacao.comentarios else 0 }})
@@ -54,7 +125,7 @@
                             {% if publicacao.comentarios %}
                                 <ul style="list-style-type: none; padding-left: 0; margin-top: 10px;">
                                     {% for comentario in publicacao.comentarios %}
-                                        <li style="background: #f4f4f4; padding: 8px; margin-bottom: 5px; border-radius: 4px;">
+                                        <li style="background: #f5f0fa; padding: 8px; margin-bottom: 5px; border-radius: 4px;">
                                             <strong>{{ comentario.usuario.nome if comentario.usuario else 'Anônimo' }}:</strong>
                                             {{ comentario.texto_coment }}
                                         </li>
@@ -76,6 +147,5 @@
             <p>Ainda não existem publicações.</p>
         {% endif %}
     </section>
-
 
 {% endblock conteudo %}

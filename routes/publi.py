@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, url_for, session
 from db import db
-from model import Publi, Curt, Coment
+from model import Publi, Curt, Coment, Not
 
 publi = Blueprint("publi", __name__)
 
@@ -32,8 +32,8 @@ def curtir(publi_id):
         return redirect(url_for("home"))
 
     usu_id = session['usuario_id']
+    publicacao = Publi.query.get_or_404(publi_id)
 
-    # Utilizando id_publicacao referente ao model.py
     curtida_existente = Curt.query.filter_by(id_publicacao=publi_id, usu_id=usu_id).first()
 
     if curtida_existente:
@@ -41,6 +41,16 @@ def curtir(publi_id):
     else:
         nova_curtida = Curt(id_publicacao=publi_id, usu_id=usu_id)
         db.session.add(nova_curtida)
+
+        if publicacao.usu_id != usu_id:
+            nome_quem_curtiu = session.get('usuario_nome', 'Alguém')
+            nova_not = Not(
+                titulo_not="Nova curtida ❤️",
+                mensagem_not=f"{nome_quem_curtiu} curtiu a sua publicação '{publicacao.titulo_publi}'.",
+                link=url_for("index"),
+                usu_id=publicacao.usu_id
+            )
+            db.session.add(nova_not)
 
     db.session.commit()
     return redirect(url_for("index"))
@@ -53,6 +63,7 @@ def comentar(publi_id):
 
     texto_coment = request.form.get("texto_coment")
     usu_id = session['usuario_id']
+    publicacao = Publi.query.get_or_404(publi_id)
 
     if texto_coment and texto_coment.strip():
         novo_comentario = Coment(
@@ -61,6 +72,17 @@ def comentar(publi_id):
             usu_id=usu_id
         )
         db.session.add(novo_comentario)
+
+        if publicacao.usu_id != usu_id:
+            nome_quem_comentou = session.get('usuario_nome', 'Alguém')
+            nova_not = Not(
+                titulo_not="Novo comentário 💬",
+                mensagem_not=f"{nome_quem_comentou} comentou na sua publicação '{publicacao.titulo_publi}'.",
+                link=url_for("index"),
+                usu_id=publicacao.usu_id
+            )
+            db.session.add(nova_not)
+
         db.session.commit()
 
     return redirect(url_for("index"))
