@@ -4,28 +4,33 @@
 
 {% block conteudo %}
 
-    <!-- Cabeçalho com Saudação Personalizada, Sino de Notificações e Avatar -->
-    <div class="cabecalho-boas-vindas">
-        <div>
-            <h1 style="font-size: 28px; margin: 0; color: #57377f;">
-                Olá, {{ session.get('usuario_nome', 'Visitante') }}! 💜
-            </h1>
-            <p style="margin: 4px 0 0 0; color: #766b83; font-size: 14px;">
-                Como você está se sentindo hoje?
-            </p>
+    <!-- Cabeçalho com Logotipo, Saudação, Sino de Notificações e Avatar -->
+    <div class="cabecalho-boas-vindas" style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <!-- Imagem da flor de lótus ao lado da saudação -->
+            <img src="{{ url_for('static', filename='img/logo_acolhe.png') }}" alt="Acolhe" style="width: 72px; height: 72px; object-fit: contain;">
+            
+            <div>
+                <h1 style="font-size: 26px; margin: 0; color: #57377f;">
+                    Olá, {{ session.get('usuario_nome', 'Visitante') }}! 💜
+                </h1>
+                <p style="margin: 2px 0 0 0; color: #766b83; font-size: 13px;">
+                    Como você está se sentindo hoje?
+                </p>
+            </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <a href="{{ url_for('notificacoes.listar') }}" style="position: relative; width: 45px; height: 45px; background: #ffffff; border: 1px solid #e9e0f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; box-shadow: 0 3px 10px rgba(75, 47, 105, 0.05);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <a href="{{ url_for('notificacoes.listar') }}" style="position: relative; width: 42px; height: 42px; background: #ffffff; border: 1px solid #e9e0f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.1rem; box-shadow: 0 3px 10px rgba(75, 47, 105, 0.05);">
                 🔔
                 {% if notificacoes_nao_lidas > 0 %}
-                    <span style="position: absolute; top: -2px; right: -2px; background: #e74c3c; color: #fff; font-size: 11px; font-weight: bold; width: 19px; height: 19px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <span style="position: absolute; top: -2px; right: -2px; background: #e74c3c; color: #fff; font-size: 11px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         {{ notificacoes_nao_lidas }}
                     </span>
                 {% endif %}
             </a>
 
-            <a href="{{ url_for('usu.perfil') }}" class="perfil-avatar" style="text-decoration: none;">
+            <a href="{{ url_for('usu.perfil') }}" class="perfil-avatar" style="text-decoration: none; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: #7950ad; color: #fff; border-radius: 50%; font-weight: bold;">
                 {{ session.get('usuario_nome', 'U')[0] | upper }}
             </a>
         </div>
@@ -34,7 +39,7 @@
     <!-- Barra de Atalho / Pesquisa -->
     <div class="barra-pesquisa-fake">
         <span style="color: #7950ad;">🔍</span>
-        <input type="text" placeholder="Compartilhe seus sentimentos..." readonly onclick="window.location.href='#criar-publi'">
+        <input type="text" placeholder="Compartilhe seus sentimentos..." readonly onclick="alternarFormularioPubli()">
     </div>
 
     <!-- Grade de Atividades (Cards Coloridos) -->
@@ -53,7 +58,7 @@
 
         <a href="{{ url_for('meditacao.meditacao') }}" class="cartao-atividade autocuidado">
             <span class="icone-card">🧘</span>
-            <h3>Autocuidado</h3>
+            <h3>Meditação</h3>
             <p>Cuide da sua mente e bem-estar</p>
         </a>
 
@@ -81,26 +86,36 @@
         </div>
     </div>
 
-    <!-- Seção de Formulário para Criar Publicação -->
-    <section id="criar-publi" style="margin-top: 20px;">
-        <h2>Compartilhe algo</h2>
+    <!-- Cabeçalho da Seção de Publicações com Botão Menor para Criar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="margin: 0; color: #57377f; font-size: 20px;">Publicações da Comunidade</h2>
+        <button type="button" onclick="alternarFormularioPubli()" id="btn-toggle-publi" style="margin: 0; padding: 10px 16px; font-size: 0.9rem; background: #7950ad; color: #fff; border-radius: 12px; border: none; cursor: pointer;">
+            + Nova Publicação
+        </button>
+    </div>
+
+    <!-- Formulário de Criar Publicação Oculto inicialmente -->
+    <section id="secao-criar-publi" style="display: none; margin-bottom: 24px; background: #fdfbff; border: 1px solid #e9e0f1;">
+        <h2 style="font-size: 18px; margin-top: 0; color: #57377f;">Compartilhe algo com a comunidade</h2>
         <form action="{{ url_for('publi.create') }}" method="POST">
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" name="titulo" placeholder="Título da publicação" required>
 
             <label for="conteudo">Conteúdo:</label>
-            <textarea id="conteudo" name="conteudo" placeholder="Escreva o que você gostaria de compartilhar..." required></textarea>
+            <textarea id="conteudo" name="conteudo" placeholder="Escreva o que você gostaria de compartilhar..." required style="min-height: 100px;"></textarea>
 
-            <button type="submit">Publicar</button>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button type="submit" style="margin: 0; flex: 1;">Publicar</button>
+                <button type="button" onclick="alternarFormularioPubli()" style="margin: 0; background: #ded3e9; color: #332b40;">Cancelar</button>
+            </div>
         </form>
     </section>
 
-    <!-- Seção de Publicações da Comunidade -->
-    <section>
-        <h2>Publicações da Comunidade</h2>
+    <!-- Seção de Listagem das Publicações -->
+    <section style="background: transparent; border: none; padding: 0; box-shadow: none;">
         {% if publicacoes %}
             {% for publicacao in publicacoes %}
-                <article class="publicacao">
+                <article class="publicacao" style="background: #ffffff !important; border: 1px solid #e9e0f1 !important; border-radius: 20px !important; padding: 22px !important; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(75, 47, 105, 0.04);">
                     <h3>{{ publicacao.titulo_publi }}</h3>
                     <p>{{ publicacao.texto_publi }}</p>
                     {% if publicacao.usuario %}
@@ -144,8 +159,33 @@
                 </article>
             {% endfor %}
         {% else %}
-            <p>Ainda não existem publicações.</p>
+            <div style="background: #ffffff; padding: 24px; border-radius: 20px; border: 1px solid #e9e0f1; text-align: center; color: #766b83;">
+                <p style="margin: 0;">Ainda não existem publicações. Seja o primeiro a compartilhar algo!</p>
+            </div>
         {% endif %}
     </section>
+
+    <!-- Script para Abrir/Fechar o formulário de publicação -->
+    <script>
+    function alternarFormularioPubli() {
+        const secao = document.getElementById('secao-criar-publi');
+        const botao = document.getElementById('btn-toggle-publi');
+        
+        if (secao.style.display === 'none' || secao.style.display === '') {
+            secao.style.display = 'block';
+            if (botao) {
+                botao.textContent = '✕ Fechar';
+                botao.style.background = '#a13e67';
+            }
+            secao.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            secao.style.display = 'none';
+            if (botao) {
+                botao.textContent = '+ Nova Publicação';
+                botao.style.background = '#7950ad';
+            }
+        }
+    }
+    </script>
 
 {% endblock conteudo %}
