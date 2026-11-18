@@ -41,22 +41,10 @@
             <span class="nav-icon">👤</span>
             <span>Perfil</span>
         </a>
-
-        {% if session.get('usuario_id') %}
-            <a href="{{ url_for('usu.logout') }}" class="nav-item">
-                <span class="nav-icon">🚪</span>
-                <span>Sair</span>
-            </a>
-        {% else %}
-            <a href="{{ url_for('home') }}" class="nav-item">
-                <span class="nav-icon">🔑</span>
-                <span>Entrar</span>
-            </a>
-        {% endif %}
     </nav>
     {% endif %}
 
-    <!-- Script Comentários retráteis -->
+    <!-- Script Global para os Comentários Retráteis -->
     <script>
     function alternarComentarios(botao) {
         const blocoComentarios = botao.nextElementSibling;

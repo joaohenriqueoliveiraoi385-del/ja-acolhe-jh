@@ -45,4 +45,22 @@
         </div>
     {% endif %}
 </section>
+
+<!-- Seção de Ações da Conta no Perfil -->
+<section style="margin-top: 2rem; text-align: center;">
+    <h2 style="font-size: 18px; color: #57377f; margin-bottom: 1rem;">Gerenciar Conta</h2>
+    
+    <form action="{{ url_for('usu.logout') }}" method="GET" onsubmit="return confirmarSaida()" style="display: inline-block;">
+        <button type="submit" style="background: #fff1f6; color: #a13e67; border: 1px solid #f0d5e1; padding: 12px 24px; border-radius: 12px; font-weight: 650; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            🚪 Sair da Conta
+        </button>
+    </form>
+</section>
+
+<!-- Script de Confirmação -->
+<script>
+function confirmarSaida() {
+    return confirm("Tem certeza de que deseja sair da sua conta?");
+}
+</script>
 {% endblock conteudo %}
